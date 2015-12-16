@@ -9,3 +9,6 @@
 
 # 忽略python-numpy 产生的存储文件
 *.npy
+
+# 忽略.gitignore文件
+.gitignore
