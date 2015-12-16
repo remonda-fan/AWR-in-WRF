@@ -1,0 +1,14 @@
+# 忽略编辑后产生的临时文件
+*py~
+
+# 忽略python产生的中间文件
+*.pyc
+
+# 忽略WRF产生的数据文件
+*.nc
+
+# 忽略python-numpy 产生的存储文件
+*.npy
+
+# 忽略.gitignore文件
+.gitignore
