@@ -93,7 +93,7 @@ def fun(data_dir,input_data,output_data):
     #-----------------------------------------
     #   set_gamma_u is the file name u.
     #------------------------------------------
-    set_gamma_u=0
+    set_gamma_u=2
     #------------------------------------------
     #   create scanning data shape
     #------------------------------------------
@@ -106,7 +106,7 @@ def fun(data_dir,input_data,output_data):
     #------------------------------------------------------------------
 
 
-    X,Y,Z,data=funlib.scanning(r_zh,0,off_X=X_set,off_Y=0,off_Z=3000)
+    X,Y,Z,sc_zh=funlib.scanning(r_zh,0,off_X=X_set,off_Y=0,off_Z=3000)
 
     #-------------------------------------------------------------------
     #   set the plot axis x and y
@@ -117,14 +117,14 @@ def fun(data_dir,input_data,output_data):
     X = X-X_set/1000
 
 
-    data = funlib.lg_refl2(data)
+    sc_zh = funlib.lg_refl2(sc_zh)
 
 
 
     fig = plt.figure(figsize=fig_size,dpi=set_dpi)
     fig.patch.set_facecolor('white')
 
-    plt.contourf(X,Y,data,levels=
+    plt.contourf(X,Y,sc_zh,levels=
     [-75, -70, -65, -60, -55,
      -50, -45, -40, -35, -30,
      -25, -20, -15, -10,  -5,
@@ -141,15 +141,15 @@ def fun(data_dir,input_data,output_data):
     plt.ylim([Y.min(),Y.max()])
     plt.ylabel('km')
     plt.title('zh')
-    print('data max ->%d',data.max())
-    print('data min ->%d',data.min())
+    print('data max ->%d',sc_zh.max())
+    print('data min ->%d',sc_zh.min())
     savefig(str(set_gamma_u)+'zh.png',dpi=set_dpi)
     plt.show()
 
     #---------------------------------------------------------------------
     #   zv plot
     #---------------------------------------------------------------------
-    X,Y,Z,data=funlib.scanning(r_zv,0,off_X=X_set,off_Y=0,off_Z=3000)
+    X,Y,Z,sc_zv=funlib.scanning(r_zv,0,off_X=X_set,off_Y=0,off_Z=3000)
     #-------------------------------------------------------------------
     #   set the plot axis x and y
     #   shift the plane x and y
@@ -158,12 +158,12 @@ def fun(data_dir,input_data,output_data):
     Y = Y/1000
     X = X-X_set/1000
 
-    data = funlib.lg_refl2(data)
+    sc_zv = funlib.lg_refl2(sc_zv)
 
 
     fig = plt.figure(figsize=fig_size,dpi=set_dpi)
     fig.patch.set_facecolor('white')
-    plt.contourf(X,Y,data,levels=
+    plt.contourf(X,Y,sc_zv,levels=
     [-75, -70, -65, -60, -55,
      -50, -45, -40, -35, -30,
      -25, -20, -15, -10,  -5,
@@ -180,15 +180,15 @@ def fun(data_dir,input_data,output_data):
     plt.ylim([Y.min(),Y.max()])
     plt.ylabel('km')
     plt.title('zv')
-    print('data max ->%d',data.max())
-    print('data min ->%d',data.min())
+    print('data max ->%d',sc_zv.max())
+    print('data min ->%d',sc_zv.min())
     savefig(str(set_gamma_u)+'zv.png',dpi=set_dpi)
     plt.show()
 
     #------------------------------------------------------------------------
     #   zdr plot
     #------------------------------------------------------------------------
-    X,Y,Z,data=funlib.scanning(r_zdr,0,off_X=X_set,off_Y=0,off_Z=3000)
+    X,Y,Z,sc_zdr=funlib.scanning(r_zdr,0,off_X=X_set,off_Y=0,off_Z=3000)
 
     #-------------------------------------------------------------------
     #   set the plot axis x and y
@@ -203,7 +203,7 @@ def fun(data_dir,input_data,output_data):
     fig = plt.figure(figsize=fig_size,dpi=set_dpi)
     fig.patch.set_facecolor('white')
 
-    plt.contourf(X,Y,data,levels=
+    plt.contourf(X,Y,sc_zdr,levels=
     [0.96,0.98,1.00,1.02,1.04,1.06,1.08,1.20,1.22,1.24,1.26,1.28,1.30,1.32,1.34,1.36,1.38],cmap=cm.jet)
     plt.colorbar(label='')
 
@@ -216,16 +216,19 @@ def fun(data_dir,input_data,output_data):
     plt.ylim([Y.min(),Y.max()])
     plt.ylabel('km')
     plt.title('zdr')
-    print('data max ->%d',data.max())
-    print('data min ->%d',data.min())
+    print('data max ->%d',sc_zdr.max())
+    print('data min ->%d',sc_zdr.min())
     savefig(str(set_gamma_u)+'zdr.png',dpi=set_dpi)
     plt.show()
 
     #------------------------------------------------------------------------
+    #	kdp and cc 's threshold from zdr
+    threshold = 1.0001
+    #------------------------------------------------------------------------
     #   kdp plot
     #------------------------------------------------------------------------
-    X,Y,Z,data=funlib.scanning(r_kdp,0,off_X=X_set,off_Y=0,off_Z=3000)
-
+    X,Y,Z,sc_kdp=funlib.scanning(r_kdp,0,off_X=X_set,off_Y=0,off_Z=3000)
+    sc_kdp = funlib.compare_kdp2zdr(sc_kdp,sc_zdr,threshold)
     #-------------------------------------------------------------------
     #   set the plot axis x and y
     #   shift the plane x and y
@@ -239,7 +242,7 @@ def fun(data_dir,input_data,output_data):
     fig = plt.figure(figsize=fig_size,dpi=set_dpi)
     fig.patch.set_facecolor('white')
 
-    plt.contourf(X,Y,data,cmap=cm.jet)
+    plt.contourf(X,Y,sc_kdp,cmap=cm.jet)
 
 
     plt.xlim([X.min(),X.max()])
@@ -251,8 +254,8 @@ def fun(data_dir,input_data,output_data):
     plt.ylabel('km')
     plt.title('kdp')
     plt.colorbar(label='deg/km')
-    print('data max ->%d',data.max())
-    print('data min ->%d',data.min())
+    print('data max ->%d',sc_kdp.max())
+    print('data min ->%d',sc_kdp.min())
 
     savefig(str(set_gamma_u)+'kdp.png',dpi=set_dpi)
     plt.show()
@@ -260,10 +263,10 @@ def fun(data_dir,input_data,output_data):
 
 
     #------------------------------------------------------------------------
-    #   kdp plot
+    #   rhv plot
     #------------------------------------------------------------------------
-    X,Y,Z,data=funlib.scanning(r_rhv,0,off_X=X_set,off_Y=0,off_Z=3000)
-
+    X,Y,Z,sc_rhv=funlib.scanning(r_rhv,0,off_X=X_set,off_Y=0,off_Z=3000)
+    sc_rhv = funlib.compare_rhv2zdr(sc_rhv,sc_zdr,threshold)
     #-------------------------------------------------------------------
     #   set the plot axis x and y
     #   shift the plane x and y
@@ -276,7 +279,7 @@ def fun(data_dir,input_data,output_data):
     fig = plt.figure(figsize=fig_size,dpi=set_dpi)
     fig.patch.set_facecolor('white')
 
-    plt.contourf(X,Y,data,cmap=cm.jet)
+    plt.contourf(X,Y,sc_rhv,cmap=cm.jet)
 
 
     plt.xlim([X.min(),X.max()])
@@ -288,8 +291,8 @@ def fun(data_dir,input_data,output_data):
     plt.ylabel('km')
     plt.title('cc')
     plt.colorbar(label='')
-    print('data max ->%d',data.max())
-    print('data min ->%d',data.min())
+    print('data max ->%d',sc_rhv.max())
+    print('data min ->%d',sc_rhv.min())
     savefig(str(set_gamma_u)+'cc.png',dpi=set_dpi)
     plt.show()
 
