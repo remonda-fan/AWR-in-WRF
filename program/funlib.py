@@ -125,23 +125,13 @@ def cal_tm2(n0,lamda,u,scatterer):
 #------------------------
 #   pr3
 #------------------------
-def compare_kdp2zdr(data1,data2,threshold=1.0):
+def compare2(data1,data2,threshold=1.0):
     [aaa,bbb]=data1.shape
     for aa in xrange(aaa):
         for bb in xrange(bbb):
 	    if data2[aa,bb]<=threshold:
 		data1[aa,bb]=np.float('nan')
     return data1
-
-
-def compare_rhv2zdr(data1,data2,threshold=1.0):
-    [aaa,bbb]=data1.shape
-    for aa in xrange(aaa):
-        for bb in xrange(bbb):
-	    if data2[aa,bb]<=threshold:
-		data1[aa,bb]=np.float('nan')
-    return data1
-
 
 def lg_refl(data):
     [aaa,bbb,ccc]=data.shape

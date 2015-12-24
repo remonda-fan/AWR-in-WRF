@@ -93,7 +93,7 @@ def fun(data_dir,input_data,output_data):
     #-----------------------------------------
     #   set_gamma_u is the file name u.
     #------------------------------------------
-    set_gamma_u=2
+    set_gamma_u=0
     #------------------------------------------
     #   create scanning data shape
     #------------------------------------------
@@ -118,13 +118,13 @@ def fun(data_dir,input_data,output_data):
 
 
     sc_zh = funlib.lg_refl2(sc_zh)
-
+    plot_zh = funlib.compare2(sc_zh,sc_zh,-50)
 
 
     fig = plt.figure(figsize=fig_size,dpi=set_dpi)
     fig.patch.set_facecolor('white')
 
-    plt.contourf(X,Y,sc_zh,levels=
+    plt.contourf(X,Y,plot_zh,levels=
     [-75, -70, -65, -60, -55,
      -50, -45, -40, -35, -30,
      -25, -20, -15, -10,  -5,
@@ -157,13 +157,13 @@ def fun(data_dir,input_data,output_data):
     X = X/1000
     Y = Y/1000
     X = X-X_set/1000
-
+    
     sc_zv = funlib.lg_refl2(sc_zv)
-
+    plot_zv = funlib.compare2(sc_zv,sc_zv,-40)
 
     fig = plt.figure(figsize=fig_size,dpi=set_dpi)
     fig.patch.set_facecolor('white')
-    plt.contourf(X,Y,sc_zv,levels=
+    plt.contourf(X,Y,plot_zv,levels=
     [-75, -70, -65, -60, -55,
      -50, -45, -40, -35, -30,
      -25, -20, -15, -10,  -5,
@@ -189,7 +189,7 @@ def fun(data_dir,input_data,output_data):
     #   zdr plot
     #------------------------------------------------------------------------
     X,Y,Z,sc_zdr=funlib.scanning(r_zdr,0,off_X=X_set,off_Y=0,off_Z=3000)
-
+    #sc_zdr = funlib.compare2(sc_zdr,sc_zdr,1.01)
     #-------------------------------------------------------------------
     #   set the plot axis x and y
     #   shift the plane x and y
@@ -222,13 +222,10 @@ def fun(data_dir,input_data,output_data):
     plt.show()
 
     #------------------------------------------------------------------------
-    #	kdp and cc 's threshold from zdr
-    threshold = 1.0001
-    #------------------------------------------------------------------------
     #   kdp plot
     #------------------------------------------------------------------------
     X,Y,Z,sc_kdp=funlib.scanning(r_kdp,0,off_X=X_set,off_Y=0,off_Z=3000)
-    sc_kdp = funlib.compare_kdp2zdr(sc_kdp,sc_zdr,threshold)
+    sc_kdp = funlib.compare2(sc_kdp,sc_zdr,1.01)
     #-------------------------------------------------------------------
     #   set the plot axis x and y
     #   shift the plane x and y
@@ -266,7 +263,7 @@ def fun(data_dir,input_data,output_data):
     #   rhv plot
     #------------------------------------------------------------------------
     X,Y,Z,sc_rhv=funlib.scanning(r_rhv,0,off_X=X_set,off_Y=0,off_Z=3000)
-    sc_rhv = funlib.compare_rhv2zdr(sc_rhv,sc_zdr,threshold)
+    sc_rhv = funlib.compare2(sc_rhv,sc_zdr,1.01)
     #-------------------------------------------------------------------
     #   set the plot axis x and y
     #   shift the plane x and y
