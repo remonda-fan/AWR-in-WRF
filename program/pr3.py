@@ -188,7 +188,7 @@ def fun(data_dir,input_data,output_data):
     #------------------------------------------------------------------------
     #   zdr plot
     #------------------------------------------------------------------------
-    X,Y,Z,sc_zdr=funlib.scanning(r_zdr,0,off_X=X_set,off_Y=0,off_Z=3000)
+    X,Y,Z,sc_zdr=funlib.scanning(funlib.lg_refl(r_zdr),0,off_X=X_set,off_Y=0,off_Z=3000)
     #sc_zdr = funlib.compare2(sc_zdr,sc_zdr,1.01)
     #-------------------------------------------------------------------
     #   set the plot axis x and y
@@ -204,7 +204,8 @@ def fun(data_dir,input_data,output_data):
     fig.patch.set_facecolor('white')
 
     plt.contourf(X,Y,sc_zdr,levels=
-    [0.96,0.98,1.00,1.02,1.04,1.06,1.08,1.20,1.22,1.24,1.26,1.28,1.30,1.32,1.34,1.36,1.38],cmap=cm.jet)
+    [0.0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1.0,1.05],cmap=cm.jet)
+
     plt.colorbar(label='')
 
 
@@ -225,7 +226,7 @@ def fun(data_dir,input_data,output_data):
     #   kdp plot
     #------------------------------------------------------------------------
     X,Y,Z,sc_kdp=funlib.scanning(r_kdp,0,off_X=X_set,off_Y=0,off_Z=3000)
-    sc_kdp = funlib.compare2(sc_kdp,sc_zdr,1.01)
+    sc_kdp = funlib.compare2(sc_kdp,sc_zdr,0.0)
     #-------------------------------------------------------------------
     #   set the plot axis x and y
     #   shift the plane x and y
@@ -263,7 +264,7 @@ def fun(data_dir,input_data,output_data):
     #   rhv plot
     #------------------------------------------------------------------------
     X,Y,Z,sc_rhv=funlib.scanning(r_rhv,0,off_X=X_set,off_Y=0,off_Z=3000)
-    sc_rhv = funlib.compare2(sc_rhv,sc_zdr,1.01)
+    sc_rhv = funlib.compare2(sc_rhv,sc_zdr,0.0)
     #-------------------------------------------------------------------
     #   set the plot axis x and y
     #   shift the plane x and y
