@@ -6,7 +6,7 @@ import sys
 
 main_dir=os.getcwd()
 os.chdir(main_dir+'\input')
-    
+
 def cgsp(data):
         [aaa,bbb,ccc]=data.shape
         temp=np.zeros([bbb,ccc,aaa])
@@ -68,7 +68,7 @@ print 'finished'
 
 Tem=1.0*TK*(Pa/100000)**(2/7)
 print 'changing shape...',
-				
+
 QRAIN=cgsp(QRAIN)
 QNRAIN=cgsp(QNRAIN)
 
@@ -144,7 +144,7 @@ def data_process(data):
         +'%1.2f%%' %(100*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc)),
     print ' '
     return data
-	
+
 def lg_refl(data):
     [aaa,bbb,ccc]=data.shape
     for aa in xrange(aaa):

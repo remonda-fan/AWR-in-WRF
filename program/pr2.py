@@ -13,8 +13,14 @@ import funlib
 
 hour   = [6, 7, 8, 9, 10, 11]
 minute = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
-
+scale = hour
 def fun(main_dir,input_data,output_data):
+    scale_s = 6
+    scale_n = 11
+    scale_s = int(raw_input('input start hour(default=6):'))
+    scale_n = int(raw_input('input start hour(default=11):'))
+    hour = [scale_s,scale_n]
+    
     for h in hour:
         for m in minute:
             if (h==11 and m ==30):
