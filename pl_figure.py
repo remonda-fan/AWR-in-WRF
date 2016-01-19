@@ -2,10 +2,42 @@ import os
 import numpy as np
 from netCDF4 import Dataset
 from mayavi import mlab
+from math import pi,gamma,log10
 import sys
 
 main_dir=os.getcwd()
-os.chdir(main_dir+'\input')
+os.chdir(main_dir+os.sep+'input')
+
+camera4=(45.0,
+ 54.735610317245346,
+ 146.51569644344281,
+ np.array([ 75.61225319,  40.62445498,   3.77040195]))
+
+#-----------------------------------------------------------
+def data_process(data):
+    [aaa,bbb,ccc]=data.shape
+    for aa in xrange(aaa):
+        for bb in xrange(bbb):
+            for cc in xrange(ccc):
+                if data[aa,bb,cc]<=1e-10:
+                    data[aa,bb,cc]=1e-10
+        print '\r|'+'='*(50*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc)) \
+        +' '*(50-50*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc))+'|'\
+        +'%1.2f%%' %(100*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc)),
+    print ' '
+    return data
+
+def lg_refl(data):
+    [aaa,bbb,ccc]=data.shape
+    for aa in xrange(aaa):
+        for bb in xrange(bbb):
+            for cc in xrange(ccc):
+                    data[aa,bb,cc]=log10(data[aa,bb,cc])
+        print '\r|'+'='*(50*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc)) \
+        +' '*(50-50*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc))+'|'\
+        +'%1.2f%%' %(100*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc)),
+    print ' '
+    return data
 
 def cgsp(data):
         [aaa,bbb,ccc]=data.shape
@@ -15,9 +47,29 @@ def cgsp(data):
                 for cc in xrange(ccc):
                     temp[bbb-bb-1,cc,aa]=data[aa,bb,cc]
         return temp
+#-----------------------------------------------------------
+
+hour   = [6, 7, 8, 9, 10, 11]
+minute = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
+h=6
+m=0
+'''
+for h in hour:
+    for m in minute:
+        if (h==11 and m ==30):
+            break
+
+        cdf_name = "wrfout_d02_2014-06-05_"+"{:0>2d}".format(h)+":"+"{:0>2d}".format(m)+":00"
+'''
+
+cdf_name = "wrfout_d02_2014-06-05_06-05-00"
+print 'reading data...'+cdf_name
+
+os.chdir(main_dir+os.sep+'input')
+
 
 print 'reading data...',
-wrfout=Dataset('wrfout_d01_2015-06-17_150000')
+wrfout=Dataset(cdf_name)
 
 QRAIN=wrfout.variables['QRAIN']
 QRAIN=QRAIN[0,:,:,:]
@@ -100,12 +152,24 @@ np.save('Pa.npy',Pa)
 np.save('Tem.npy',Tem)
 print 'finished'
 
-Q=QRAIN=QSNOW+QHAIL
+Q=QRAIN+QSNOW+QHAIL
 Q=Q*1000.0
-camera=(0.0, 0.0, 254.57964239946824, np.array([ 41. ,  49.5,  14.5]))
-camera2=(45.00000000000005,54.735610317245346,389.61669188814807,
-np.array([61.00005691,87.63795239,6.8619907]))
-camera3=(45.0,54.735610317245346,241.16461125231757,np.array([40.5,49.89198494,11.79772854]))
+
+mlab.figure('Q',bgcolor=(1,1,1),fgcolor=(0,0,0))
+
+fig_Q=mlab.contour3d(Q,vmin=0,colormap='jet')
+fig_Q.contour.number_of_contours=20
+fig_Q.actor.property.opacity=0.4
+#Q.contour.minimum_contour=0
+#mlab.outline(color=(0,0,0))
+mlab.axes(color=(0,0,0))
+colorbar=mlab.colorbar(title='g/kg',orientation='vertical',nb_labels=10)
+#mlab.axes()
+mlab.title('Q_'+"{:0>2d}".format(h)+"{:0>2d}".format(m)+"00")
+mlab.view(*camera4)
+mlab.savefig('Q_'+"{:0>2d}".format(h)+"{:0>2d}".format(m)+"00"+'.png')
+
+
 '''
 mlab.figure('Qr')
 mlab.view(*camera)
@@ -114,6 +178,7 @@ Qr.contour.number_of_contours=20
 Qr.actor.property.opacity=0.4
 mlab.outline()
 mlab.axes()
+'''
 '''
 QRAIN=QRAIN*1000
 size_x,size_y,size_z=QRAIN.shape
@@ -128,38 +193,14 @@ colorbar=mlab.colorbar(title='g/kg',orientation='vertical',nb_labels=10)
 colorbar.scalar_bar_representation.position=[0.85,0.1]
 colorbar.scalar_bar_representation.position2=[0.12,0.9]
 mlab.view(*camera)
-mlab.savefig('Q.png', size=(800,800))
+mlab.savefig('QRAIN.png', size=(800,800))
 mlab.show()
-from math import pi,gamma,log10
 
-def data_process(data):
-    [aaa,bbb,ccc]=data.shape
-    for aa in xrange(aaa):
-        for bb in xrange(bbb):
-            for cc in xrange(ccc):
-                if data[aa,bb,cc]<=1e-10:
-                    data[aa,bb,cc]=1e-10
-        print '\r|'+'='*(50*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc)) \
-        +' '*(50-50*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc))+'|'\
-        +'%1.2f%%' %(100*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc)),
-    print ' '
-    return data
 
-def lg_refl(data):
-    [aaa,bbb,ccc]=data.shape
-    for aa in xrange(aaa):
-        for bb in xrange(bbb):
-            for cc in xrange(ccc):
-                    data[aa,bb,cc]=log10(data[aa,bb,cc])
-        print '\r|'+'='*(50*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc)) \
-        +' '*(50-50*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc))+'|'\
-        +'%1.2f%%' %(100*(cc+bb*ccc+aa*bbb*ccc)/(aaa*bbb*ccc)),
-    print ' '
-    return data
 
 QNRAIN = lg_refl(data_process(QNRAIN))
 size_x,size_y,size_z=QNRAIN.shape
-mlab.figure('QN',bgcolor=(1,1,1),fgcolor=(0,0,0),size=(700,600))
+mlab.figure('QNRAIN',bgcolor=(1,1,1),fgcolor=(0,0,0),size=(700,600))
 fig_Qr=mlab.contour3d(QNRAIN,vmin=0,colormap='jet')
 fig_Qr.contour.number_of_contours=40
 fig_Qr.actor.property.opacity=0.3
@@ -171,8 +212,9 @@ colorbar.scalar_bar_representation.position=[0.85,0.1]
 colorbar.scalar_bar_representation.position2=[0.12,0.9]
 mlab.view(*camera)
 
-mlab.savefig('Qn.png', size=(800,800))
+mlab.savefig('QNRAIN.png', size=(800,800))
 #mlab.show()
+'''
 '''
 mlab.figure('Qh')
 mlab.view(*camera)
@@ -190,17 +232,7 @@ Qs.actor.property.opacity=0.4
 mlab.outline()
 mlab.axes()
 '''
-'''
-mlab.figure('Q',bgcolor=(1,1,1),fgcolor=(0,0,0))
-mlab.view(*camera2)
-fig_Q=mlab.contour3d(Q,vmin=0,colormap='jet')
-fig_Q.contour.number_of_contours=20
-fig_Q.actor.property.opacity=0.4
-#Q.contour.minimum_contour=0
-mlab.outline(color=(0,0,0))
-#mlab.axes(color=(0,0,0))
-colorbar=mlab.colorbar(title='g/kg',orientation='vertical',nb_labels=10)
-'''
+
 
 '''
 mlab.figure('refl_10cm')
