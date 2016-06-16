@@ -1,0 +1,6 @@
+*.png
+*.npy
+wrfout*
+*.pyc
+*.py~
+*.gif

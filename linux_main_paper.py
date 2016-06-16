@@ -4,17 +4,9 @@ Created on Wed Aug 26 16:09:05 2015
 
 @author: qwe14789cn
 """
-#----------------------------------------------------------------
-#   导入扩展库
-#----------------------------------------------------------------
 import os
 import sys
 import platform
-
-#----------------------------------------------------------------
-#   处理系统路径bug，win和linux 路径分隔是/和\，但是只能在linux下运行
-#   这段处理就没用了 懒得删除
-#----------------------------------------------------------------
 depart_path = os.sep
 
 pth1 = sys.argv
@@ -45,9 +37,6 @@ if platform.system()=='Windows':
 else:
     main_dir = get_dir(pth_str)
 
-#----------------------------------------------------------------
-#   创建 文件夹路径 变量
-#----------------------------------------------------------------
 input_data = depart_path + 'input'
 output_data = depart_path + 'output'
 program_dir = depart_path + 'program'
@@ -55,9 +44,6 @@ sys.path.append(main_dir + program_dir)
 
 os.chdir(main_dir)
 
-#----------------------------------------------------------------
-#   显示菜单
-#----------------------------------------------------------------
 while(1):
     i = os.system('clear')
     print
@@ -68,15 +54,8 @@ while(1):
     print('                               ')
     print('\t\t1.read and save wrf data')
     print('\t\t2.calculate and save polar data')
-    print('\t\t3.radar scan')
-    print('\t\t4.plot figures')
-    print('\t\t5.trans data to matlab format')
     print('\t\t0.exit program')
     print('-' * 60)
-    
-#----------------------------------------------------------------
-#   根据按键选择功能
-#----------------------------------------------------------------
 
     select = raw_input('select:?')
     print(' ')
@@ -91,24 +70,6 @@ while(1):
         os.chdir(main_dir + program_dir)
         import pr2
         pr2.fun(main_dir, input_data, output_data)
-        os.chdir(main_dir)
-
-    elif select == '3':
-        os.chdir(main_dir + program_dir)
-        import pr3
-        pr3.fun(main_dir, input_data, output_data)
-        os.chdir(main_dir)
-
-    elif select == '4':
-        os.chdir(main_dir + program_dir)
-        import pr4
-        pr4.fun(main_dir, input_data, output_data)
-        os.chdir(main_dir)
-
-    elif select == '5':
-        os.chdir(main_dir + program_dir)
-        import pr5
-        pr5.fun(main_dir, input_data, output_data)
         os.chdir(main_dir)
 
     elif select == '0':

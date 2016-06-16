@@ -26,7 +26,7 @@ def fun(main_dir,input_data,output_data):
             if (h==11 and m ==30):
                 break
 
-            cdf_name = "wrfout_d02_2014-06-05_"+"{:0>2d}".format(h)+":"+"{:0>2d}".format(m)+":00"
+            cdf_name = "wrfout_d02_2014-06-05_"+"{:0>2d}".format(h)+"-"+"{:0>2d}".format(m)+"-00"
             print 'reading data...'+cdf_name
 
             os.chdir(main_dir+output_data+os.sep+cdf_name)
